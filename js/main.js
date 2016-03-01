@@ -50,7 +50,7 @@ function renderTotal(total) {
 }
 
 function renderTitle(queryInput) {
-  document.getElementById('currentQuery').innerHTML = "Results for latest successful search term: " + queryInput;
+  document.getElementById('currentQuery').innerHTML = "Results for your latest successful search term: " + queryInput;
 }
 // Create fascade to hide abstraction and make it easy to read; more declarative
 function renderPagination(total, links) {
