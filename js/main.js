@@ -4,6 +4,11 @@ var state = {
 }
 
 function fetchTwitchData(url) {
+  // clear out children to retrieve new results from page
+  var twitchResults = document.getElementById('twitchResults');
+  while (twitchResults.hasChildNodes()) {
+    twitchResults.removeChild(twitchResults.lastChild);
+  }
   // Create script element, configure, and attach to div
   var script = document.createElement('script');
   script.setAttribute('src', url);
@@ -20,12 +25,12 @@ function handleTwitchData(response) {
   } else {
     // set global application state
     state.data = response;
+    console.log(state.data);
 
     var total = state.data._total,
         links = state.data._links,
         streams = state.data.streams;
 
-    console.log(state.data);
     renderTotal(total);
     renderPagination(total, links);
     renderResults(state.data.streams);
@@ -77,9 +82,9 @@ function renderRow(stream) {
   rowDiv.setAttribute("class", "resultRow");
   textDiv.setAttribute("class", "resultText");
   rowDiv.insertAdjacentHTML("beforeEnd", '<img src="' + stream.preview.medium + '" />');
-  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.channel.display_name + "</div>");
-  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.game + " - " + stream.viewers + "viewers</div>");
-  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.channel.status + "</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='displayName'>" + stream.channel.display_name + "</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>" + stream.game + " - " + stream.viewers + " viewers</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class ='status'>" + stream.channel.status + "</div>");
 
   twitchResults.appendChild(rowDiv);
   rowDiv.appendChild(textDiv);
