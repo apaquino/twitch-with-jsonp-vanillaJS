@@ -18,3 +18,4 @@ There is room for improvements and updates in the app if it were to be deployed 
 * This exercise made me appreciate react and react-native in building UI's.
 * After working with the twitch API, I know graphQL would have downloaded much less data then I actually needed.
 * RelayJS handles pagination better and the Twitch api give unpredictable results.
+* Also, I can't wait when all browsers support ES6/2015.  String templates and destructuring is so second nature to me now.
