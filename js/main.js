@@ -5,10 +5,7 @@ var state = {
 
 function fetchTwitchData(url) {
   // clear out children to retrieve new results from page
-  var twitchResults = document.getElementById('twitchResults');
-  while (twitchResults.hasChildNodes()) {
-    twitchResults.removeChild(twitchResults.lastChild);
-  }
+  clearResults();
   // Create script element, configure, and attach to div
   var script = document.createElement('script');
   script.setAttribute('src', url);
@@ -20,20 +17,24 @@ function fetchTwitchData(url) {
 function handleTwitchData(response) {
   if(response.error) {
     console.log("log to crash analytics");
-    // render error
     console.log(response.error);
+    // render error
+    renderErrorRow();
   } else {
     // set global application state
     state.data = response;
-    console.log(state.data);
 
     var total = state.data._total,
         links = state.data._links,
         streams = state.data.streams;
 
-    renderTotal(total);
-    renderPagination(total, links);
-    renderResults(state.data.streams);
+    if (streams.length === 0) {
+      renderNoResultsRow()
+    } else {
+      renderTotal(total);
+      renderPagination(total, links);
+      renderResults(state.data.streams);
+    }
   }
 }
 
@@ -69,9 +70,10 @@ function renderRightArrow(total, links) {
 function renderPageInfo(total, links) {
   var pageInfo = document.getElementById('pageInfo'),
       nextParams = getQueryParameters(links.next),
-      pages = Math.ceil(total / 10);
+      pages = Math.ceil(total / 10),
+      currentIndex = (total === 0) ? 0 :  (nextParams.offset / 10);
 
-  pageInfo.innerHTML = (nextParams.offset / 10) + " / " + pages;
+  pageInfo.innerHTML =  currentIndex + " / " + pages;
 }
 
 function renderRow(stream) {
@@ -89,6 +91,38 @@ function renderRow(stream) {
   twitchResults.appendChild(rowDiv);
   rowDiv.appendChild(textDiv);
 
+}
+
+function renderErrorRow() {
+  var rowDiv = document.createElement('div'),
+      textDiv = document.createElement('div'),
+      twitchResults = document.getElementById('twitchResults');
+
+  rowDiv.setAttribute("class", "resultRow");
+  textDiv.setAttribute("class", "resultText");
+  rowDiv.insertAdjacentHTML("beforeEnd", '<img class="errorImage" src="./sadAnakin.jpg" />');
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='displayName'>Oops! Sorry</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>Something went wrong.</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='status'>Please try again.</div>");
+
+  twitchResults.appendChild(rowDiv);
+  rowDiv.appendChild(textDiv);
+}
+
+function renderNoResultsRow() {
+  var rowDiv = document.createElement('div'),
+      textDiv = document.createElement('div'),
+      twitchResults = document.getElementById('twitchResults');
+
+  rowDiv.setAttribute("class", "resultRow");
+  textDiv.setAttribute("class", "resultText");
+  rowDiv.insertAdjacentHTML("beforeEnd", '<img class="errorImage" src="./movie_poster.jpg" />');
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='displayName'>Awww, no results</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>But here is a cool picture</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='status'>you can look at.</div>");
+
+  twitchResults.appendChild(rowDiv);
+  rowDiv.appendChild(textDiv);
 }
 
 function renderResults(streams) {
@@ -112,6 +146,14 @@ function getQueryParameters(url) {
     parameters[pair[0]] = decodeURIComponent(pair[1]);
   }
   return parameters;
+}
+
+function clearResults() {
+  var twitchResults = document.getElementById('twitchResults');
+
+  while (twitchResults.hasChildNodes()) {
+    twitchResults.removeChild(twitchResults.lastChild);
+  }
 }
 
 // UI event handlers
