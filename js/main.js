@@ -18,7 +18,7 @@ function handleTwitchData(response) {
     // render error
     console.log(response.error);
   } else {
-    // set state
+    // set global application state
     state.data = response;
 
     var total = state.data._total,
@@ -28,16 +28,16 @@ function handleTwitchData(response) {
     console.log(state.data);
     renderTotal(total);
     renderPagination(total, links);
-    renderResults();
+    renderResults(state.data.streams);
   }
 }
 
 function renderTotal(total) {
-  document.getElementById('resultsTotal').innerHTML = total;
+  document.getElementById('resultsTotal').innerHTML = "Total Results: " + total;
 }
 
 function renderTitle(queryInput) {
-  document.getElementById('currentQuery').innerHTML = queryInput;
+  document.getElementById('currentQuery').innerHTML = "Results for the search term: " + queryInput;
 }
 
 function renderPagination(total, links) {
@@ -69,12 +69,28 @@ function renderPageInfo(total, links) {
   pageInfo.innerHTML = (nextParams.offset / 10) + " / " + pages;
 }
 
-function renderRow() {
+function renderRow(stream) {
+  var rowDiv = document.createElement('div'),
+      textDiv = document.createElement('div'),
+      twitchResults = document.getElementById('twitchResults');
+
+  rowDiv.setAttribute("class", "resultRow");
+  textDiv.setAttribute("class", "resultText");
+  rowDiv.insertAdjacentHTML("beforeEnd", '<img src="' + stream.preview.medium + '" />');
+  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.channel.display_name + "</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.game + " - " + stream.viewers + "viewers</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div>" + stream.channel.status + "</div>");
+
+  twitchResults.appendChild(rowDiv);
+  rowDiv.appendChild(textDiv);
 
 }
 
-function renderResults() {
-
+function renderResults(streams) {
+  var i = streams.length;
+  while(i--) {
+    renderRow(streams[i]);
+  }
 }
 
 // helpers
@@ -88,9 +104,8 @@ function getQueryParameters(url) {
 
   for (var i = 0; i < pairs.length; i++) {
     var pair = pairs[i].split('=');
-    parameters[pair[0]] = pair[1];
+    parameters[pair[0]] = decodeURIComponent(pair[1]);
   }
-
   return parameters;
 }
 

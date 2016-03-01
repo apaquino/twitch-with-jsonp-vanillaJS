@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5% 15%;
+  border: 1px;
+  border-color: black;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  padding: 1em;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  margin-bottom: 1em;
+  background: #1e69b2;
+  background: -webkit-radial-gradient(#1e69b2, #28b4dc);
+  background: -o-radial-gradient(#1e69b2, #28b4dc);
+  background: -moz-radial-gradient(r#1e69b2, #28b4dc);
+  background: radial-gradient(#1e69b2, #28b4dc);
+}
+
+#leftArrow {
+  display: none;
+}
+
+#rightArrow {
+  display: none;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultRow {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5em;
+}
+
+.resultText {
+  flex-direction: column;
+  margin-left: 1em;
+}

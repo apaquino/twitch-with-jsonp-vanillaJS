@@ -3,24 +3,44 @@
   <head>
     <meta charset="utf-8">
     <title>Twitch Search</title>
+    <link rel="stylesheet" href="./style/master.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
-    <form id="queryForm">
-      <input id="queryInput" type="text" name="query" placeholder="search query">
-      <button id="searchButton">Search</button>
-    </form>
+    <div class="container">
 
-    <div id="resultHeader">
-      Total results: <span id="resultsTotal"></span>
-      Results for the search: <span id="currentQuery">test query</span>
-
-      <div id="paginationControls">
-        <span id="leftArrow"> < </span>
-        <span id="pageInfo">b</span>
-        <span id="rightArrow"> > </span>
+      <div class="search">
+        <form id="queryForm">
+          <input id="queryInput" type="text" name="query" placeholder="search query">
+          <button id="searchButton">Search</button>
+        </form>
       </div>
+
+      <div class="header" id="resultHeader">
+        <div class="" id="resultsTotal">
+        </div>
+        <div class="" id="currentQuery">
+          Welcome to Twitch
+        </div>
+        <div id="paginationControls">
+          <span id="leftArrow"> < </span>
+          <span id="pageInfo"></span>
+          <span id="rightArrow"> > </span>
+        </div>
+      </div>
+
+      <div class="results" id="twitchResults">
+        <!-- <div class="resultRow" >
+          <img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_sedit666-320x180.jpg" />
+          <div class="resultText">
+            <div>nice__username</div>
+            <div>StarCraft II - 508 viewers</div>
+            <div>damn destiny hosted me o_O</div>
+          </div>
+        </div> -->
+      </div>
+
     </div>
-    <div id="twitchResults"></div>
+
     <div id="scriptRoot"></div>
     <script src="./js/main.js" charset="utf-8"></script>
   </body>
