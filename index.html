@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Twitch Search</title>
+  </head>
+  <body>
+    <form id="queryForm">
+      <input id="queryInput" type="text" name="query" placeholder="search query">
+      <button id="searchButton">Search</button>
+    </form>
+
+    <div id="resultHeader">
+      Total results: <span id="resultsTotal"></span>
+      Results for the search: <span id="currentQuery">test query</span>
+
+      <div id="paginationControls">
+        <span id="leftArrow"> < </span>
+        <span id="pageInfo">b</span>
+        <span id="rightArrow"> > </span>
+      </div>
+    </div>
+    <div id="twitchResults"></div>
+    <div id="scriptRoot"></div>
+    <script src="./js/main.js" charset="utf-8"></script>
+  </body>
+</html>
