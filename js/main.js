@@ -4,7 +4,7 @@ var state = {
 }
 
 function fetchTwitchData(url) {
-  // clear out children to retrieve new results from page
+  // clear out children to retrieve new results from the page
   clearResults();
   // Create script element, configure, and attach to div
   var script = document.createElement('script');
@@ -13,11 +13,15 @@ function fetchTwitchData(url) {
   // Clean up and remove script tag
   script.parentNode.removeChild(script);
 }
-
+// callback for the JSONP call
 function handleTwitchData(response) {
   if(response.error) {
     console.log("log to crash analytics", response.error);
-    // render error
+    // render error page
+    /**
+      to force the error, go to line 143 and replace with this to not give it a "q" parameters
+      return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData";
+    */
     renderErrorRow();
   } else {
     // set global application state
@@ -26,10 +30,10 @@ function handleTwitchData(response) {
     var total = state.data._total,
         links = state.data._links,
         streams = state.data.streams;
-    // check if there are no results to prevent running other functions
+    // check if there are no results to avoid running renderResults
     if (streams.length === 0) {
       renderNoResultsRow();
-      // Technical debt, opportunity to be DRY
+      // Technical debt, opportunity to make DRY.  to see, search for "armand"
       renderTotal(total);
       renderPagination(total, links);
     } else {
@@ -40,7 +44,7 @@ function handleTwitchData(response) {
   }
 }
 
-// Try to be single responsibility function as much as possible
+// Try to make it single responsibility functions as much as possible
 function renderTotal(total) {
   document.getElementById('resultsTotal').innerHTML = "Total Results: " + total;
 }
@@ -48,7 +52,7 @@ function renderTotal(total) {
 function renderTitle(queryInput) {
   document.getElementById('currentQuery').innerHTML = "Results for latest successful search term: " + queryInput;
 }
-// Create fascade to hide abstraction and easy to read, more declarative
+// Create fascade to hide abstraction and make it easy to read; more declarative
 function renderPagination(total, links) {
   renderLeftArrow(links);
   renderPageInfo(total, links);
@@ -79,7 +83,7 @@ function renderPageInfo(total, links) {
       // If there are no records, it will render 1 / 0.
   pageInfo.innerHTML =  currentIndex + " / " + pages;
 }
-
+// Will be used when loops through array streams. Similiar to react native list view.
 function renderRow(stream) {
   var rowDiv = document.createElement('div'),
       textDiv = document.createElement('div'),
@@ -94,9 +98,8 @@ function renderRow(stream) {
 
   twitchResults.appendChild(rowDiv);
   rowDiv.appendChild(textDiv);
-
 }
-// Create functions to render row.  Similiar to react native list view.
+
 function renderErrorRow() {
   var rowDiv = document.createElement('div'),
       textDiv = document.createElement('div'),
@@ -135,12 +138,11 @@ function renderResults(streams) {
     renderRow(streams[i]);
   }
 }
-
 // helpers
 function createUrl(queryString) {
   return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData&q=" + encodeURIComponent(queryString);
 }
-// I want to use the offset in the logic of the pagination
+// I want to use the offset and total in the pagination logic
 function getQueryParameters(url) {
   var parameters = {},
       pairs = url.slice(url.indexOf('?') + 1).split('&');
@@ -159,7 +161,6 @@ function clearResults() {
     twitchResults.removeChild(twitchResults.lastChild);
   }
 }
-
 // UI event handlers
 var queryForm = document.getElementById('queryForm'),
     leftArrow = document.getElementById('leftArrow'),
@@ -174,7 +175,7 @@ queryForm.addEventListener('submit', function handleSubmit(e) {
 
   fetchTwitchData(url);
   renderTitle(queryValue);
-  // clear field after submitting
+  // clear search field after submitting
   queryInput.value = "";
 });
 
