@@ -16,8 +16,7 @@ function fetchTwitchData(url) {
 
 function handleTwitchData(response) {
   if(response.error) {
-    console.log("log to crash analytics");
-    console.log(response.error);
+    console.log("log to crash analytics", response.error);
     // render error
     renderErrorRow();
   } else {
@@ -27,9 +26,12 @@ function handleTwitchData(response) {
     var total = state.data._total,
         links = state.data._links,
         streams = state.data.streams;
-
+    // check if there are no results to prevent running other functions
     if (streams.length === 0) {
-      renderNoResultsRow()
+      renderNoResultsRow();
+      // Technical debt, opportunity to be DRY
+      renderTotal(total);
+      renderPagination(total, links);
     } else {
       renderTotal(total);
       renderPagination(total, links);
@@ -38,14 +40,15 @@ function handleTwitchData(response) {
   }
 }
 
+// Try to be single responsibility function as much as possible
 function renderTotal(total) {
   document.getElementById('resultsTotal').innerHTML = "Total Results: " + total;
 }
 
 function renderTitle(queryInput) {
-  document.getElementById('currentQuery').innerHTML = "Results for the search term: " + queryInput;
+  document.getElementById('currentQuery').innerHTML = "Results for latest successful search term: " + queryInput;
 }
-
+// Create fascade to hide abstraction and easy to read, more declarative
 function renderPagination(total, links) {
   renderLeftArrow(links);
   renderPageInfo(total, links);
@@ -55,7 +58,7 @@ function renderPagination(total, links) {
 function renderLeftArrow(links) {
   var leftArrow = document.getElementById('leftArrow'),
       displayLeftArrow = links.prev ? "inline" : "none";
-
+      // If there is no prev link, you are at the first index
   leftArrow.style.display = displayLeftArrow;
 }
 
@@ -63,7 +66,8 @@ function renderRightArrow(total, links) {
   var rightArrow = document.getElementById('rightArrow'),
       nextParams = getQueryParameters(links.next),
       displayRightArrow = (total > nextParams.offset) ? "inline" : "none";
-
+      // if the total amount if results is more than the offset, there is no next
+      // you can go but you will get a blank screen.  RelayJS handles this better.
   rightArrow.style.display = displayRightArrow;
 }
 
@@ -72,7 +76,7 @@ function renderPageInfo(total, links) {
       nextParams = getQueryParameters(links.next),
       pages = Math.ceil(total / 10),
       currentIndex = (total === 0) ? 0 :  (nextParams.offset / 10);
-
+      // If there are no records, it will render 1 / 0.
   pageInfo.innerHTML =  currentIndex + " / " + pages;
 }
 
@@ -92,7 +96,7 @@ function renderRow(stream) {
   rowDiv.appendChild(textDiv);
 
 }
-
+// Create functions to render row.  Similiar to react native list view.
 function renderErrorRow() {
   var rowDiv = document.createElement('div'),
       textDiv = document.createElement('div'),
@@ -127,6 +131,7 @@ function renderNoResultsRow() {
 
 function renderResults(streams) {
   var i = streams.length;
+  // Optimized iteration.  pre-test and post-execution step combined.
   while(i--) {
     renderRow(streams[i]);
   }
@@ -136,7 +141,7 @@ function renderResults(streams) {
 function createUrl(queryString) {
   return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData&q=" + encodeURIComponent(queryString);
 }
-
+// I want to use the offset in the logic of the pagination
 function getQueryParameters(url) {
   var parameters = {},
       pairs = url.slice(url.indexOf('?') + 1).split('&');
@@ -147,7 +152,7 @@ function getQueryParameters(url) {
   }
   return parameters;
 }
-
+// Required for moving from page to page or after 0 result search
 function clearResults() {
   var twitchResults = document.getElementById('twitchResults');
 
@@ -157,7 +162,6 @@ function clearResults() {
 }
 
 // UI event handlers
-
 var queryForm = document.getElementById('queryForm'),
     leftArrow = document.getElementById('leftArrow'),
     rightArrow = document.getElementById('rightArrow');
