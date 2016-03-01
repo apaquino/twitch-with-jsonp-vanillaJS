@@ -41,18 +41,32 @@ function renderTitle(queryInput) {
 }
 
 function renderPagination(total, links) {
-  // TODO create separate functions
+  renderLeftArrow(links);
+  renderPageInfo(total, links);
+  renderRightArrow(total, links);
+}
+
+function renderLeftArrow(links) {
   var leftArrow = document.getElementById('leftArrow'),
-      rightArrow = document.getElementById('rightArrow'),
-      pageInfo = document.getElementById('pageInfo'),
-      displayLeftArrow = links.prev ? "inline" : "none",
-      nextParams = getQueryParameters(links.next),
-      displayRightArrow = (total > nextParams.offset) ? "inline" : "none",
-      pages = Math.ceil(total / 10);
+      displayLeftArrow = links.prev ? "inline" : "none";
 
   leftArrow.style.display = displayLeftArrow;
-  pageInfo.innerHTML = (nextParams.offset / 10) + " / " + pages;
+}
+
+function renderRightArrow(total, links) {
+  var rightArrow = document.getElementById('rightArrow'),
+      nextParams = getQueryParameters(links.next),
+      displayRightArrow = (total > nextParams.offset) ? "inline" : "none";
+
   rightArrow.style.display = displayRightArrow;
+}
+
+function renderPageInfo(total, links) {
+  var pageInfo = document.getElementById('pageInfo'),
+      nextParams = getQueryParameters(links.next),
+      pages = Math.ceil(total / 10);
+
+  pageInfo.innerHTML = (nextParams.offset / 10) + " / " + pages;
 }
 
 function renderRow() {
