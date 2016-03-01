@@ -14,6 +14,6 @@ There is room for improvements and updates in the app if it were to be deployed 
   * again, humans would not be able to read the css but the computer would still be able to.
 * use base64 for some of the stock images for error messages and have it in-line with the page so it would prevent another network call.
 
-This exercise made me appreciate react and react-native in building UI's.
-After working with the twitch API graphQL would download much less data then I actually needed.
-RelayJS handles pagination better and the Twitch api give unpredictable results.
+* This exercise made me appreciate react and react-native in building UI's.
+* After working with the twitch API, I know graphQL would have downloaded much less data then I actually needed.
+* RelayJS handles pagination better and the Twitch api give unpredictable results.
