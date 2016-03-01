@@ -122,8 +122,7 @@ function renderNoResultsRow() {
   textDiv.setAttribute("class", "resultText");
   rowDiv.insertAdjacentHTML("beforeEnd", '<img class="errorImage" src="./movie_poster.jpg" />');
   textDiv.insertAdjacentHTML("beforeEnd", "<div class='displayName'>Awww, no results</div>");
-  textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>But here is a cool picture</div>");
-  textDiv.insertAdjacentHTML("beforeEnd", "<div class='status'>you can look at.</div>");
+  textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>But here is a cool picture you can look at.</div>");
 
   twitchResults.appendChild(rowDiv);
   rowDiv.appendChild(textDiv);

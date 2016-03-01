@@ -105,3 +105,14 @@ input {
   height: 180px;
   width: 320px;
 }
+
+.launchImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 30px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  height: 360px;
+  width: 720px;
+}
