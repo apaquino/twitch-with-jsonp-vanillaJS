@@ -99,7 +99,7 @@ function renderRow(stream) {
   twitchResults.appendChild(rowDiv);
   rowDiv.appendChild(textDiv);
 }
-
+// TODO: Make a single renderRow functions for results, no results, error.
 function renderErrorRow() {
   var rowDiv = document.createElement('div'),
       textDiv = document.createElement('div'),
