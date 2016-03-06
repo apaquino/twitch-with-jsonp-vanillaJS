@@ -119,3 +119,12 @@ input {
   width: auto;
   padding: 3%;
 }
+
+.loadingImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+  width: 50%;
+  padding: 25%;
+}
