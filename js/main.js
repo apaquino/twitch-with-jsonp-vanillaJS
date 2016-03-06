@@ -7,8 +7,6 @@
   var twitchStateCache = {};
 
   function fetchTwitchData(url) {
-    // clear out children to retrieve new results from the page
-    // TODO can make generic helper for web utils
     renderLoadingSpinner();
 
     var cacheStr = cleanJSONPUrl(url);
@@ -31,15 +29,17 @@
       console.log("log to crash analytics", response.error);
       // render error page
       /**
-        to force the error, go to line 161 and replace with this to not give it a "q" parameters
+        to force the error, go to line 175 and replace with this to not give it a "q" parameters
         return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData";
       */
       renderErrorRow();
     } else {
       // set cache & global application state
       var twitchUrl = response._links.self;
+
       twitchStateCache[twitchUrl] = response;
       state.data = twitchStateCache[twitchUrl];
+
       renderPage(state);
     }
   }
