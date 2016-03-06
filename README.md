@@ -20,4 +20,11 @@ There is room for improvements and updates in the app if it were to be deployed 
 * RelayJS handles pagination better and the Twitch api give unpredictable results.
 * Also, I can't wait when all browsers support ES6/2015.  String templates and destructuring is so second nature to me now.
 * Opportunities to make functions re-usable and not tightly coupled.
-* Opportunities to make renderRow functions DRY 
+* Opportunities to make renderRow functions DRY
+
+### Change log
+
+* Add cache to make performance appear better
+* Wrapped main.js in IIFF
+* Add loading spinner
+  * issue on safari
