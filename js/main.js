@@ -1,17 +1,28 @@
 // Global Application state
 var state = {
   data: ""
-}
+};
+// add cache for performance
+var twitchStateCache = {};
 
 function fetchTwitchData(url) {
   // clear out children to retrieve new results from the page
-  clearResults();
-  // Create script element, configure, and attach to div
-  var script = document.createElement('script');
-  script.setAttribute('src', url);
-  document.getElementById('scriptRoot').appendChild(script);
-  // Clean up and remove script tag
-  script.parentNode.removeChild(script);
+  // TODO can make generic helper for web utils
+  clearResults("twitchResults");
+
+  var cacheStr = cleanJSONPUrl(url);
+
+  if (twitchStateCache[cacheStr]) {
+    state.data = twitchStateCache[cacheStr];
+    renderPage(state);
+  } else {
+    // Create script element, configure, and attach to div
+    var script = document.createElement('script');
+    script.setAttribute('src', url);
+    document.getElementById('scriptRoot').appendChild(script);
+    // Clean up and remove script tag
+    script.parentNode.removeChild(script);
+  }
 }
 // callback for the JSONP call
 function handleTwitchData(response) {
@@ -19,28 +30,16 @@ function handleTwitchData(response) {
     console.log("log to crash analytics", response.error);
     // render error page
     /**
-      to force the error, go to line 143 and replace with this to not give it a "q" parameters
+      to force the error, go to line 160 and replace with this to not give it a "q" parameters
       return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData";
     */
     renderErrorRow();
   } else {
-    // set global application state
-    state.data = response;
-
-    var total = state.data._total,
-        links = state.data._links,
-        streams = state.data.streams;
-    // check if there are no results to avoid running renderResults
-    if (streams.length === 0) {
-      renderNoResultsRow();
-      // Technical debt, opportunity to make DRY.  to see, search for "armand"
-      renderTotal(total);
-      renderPagination(total, links);
-    } else {
-      renderTotal(total);
-      renderPagination(total, links);
-      renderResults(state.data.streams);
-    }
+    // set cache & global application state
+    var twitchUrl = response._links.self;
+    twitchStateCache[twitchUrl] = response;
+    state.data = twitchStateCache[twitchUrl];
+    renderPage(state);
   }
 }
 
@@ -91,7 +90,7 @@ function renderRow(stream) {
 
   rowDiv.setAttribute("class", "resultRow");
   textDiv.setAttribute("class", "resultText");
-  rowDiv.insertAdjacentHTML("beforeEnd", '<img src="' + stream.preview.medium + '" />');
+  rowDiv.insertAdjacentHTML("beforeEnd", '<img class="resultImage" src="' + stream.preview.medium + '" />');
   textDiv.insertAdjacentHTML("beforeEnd", "<div class='displayName'>" + stream.channel.display_name + "</div>");
   textDiv.insertAdjacentHTML("beforeEnd", "<div class='game'>" + stream.game + " - " + stream.viewers + " viewers</div>");
   textDiv.insertAdjacentHTML("beforeEnd", "<div class ='status'>" + stream.channel.status + "</div>");
@@ -138,6 +137,24 @@ function renderResults(streams) {
     renderRow(streams[i]);
   }
 }
+
+function renderPage(newState) {
+  var total = newState.data._total,
+      links = newState.data._links,
+      streams = newState.data.streams;
+  // check if there are no results to avoid running renderResults
+  if (streams.length === 0) {
+    renderNoResultsRow();
+    // Technical debt, opportunity to make DRY.  to see, search for "armand"
+    renderTotal(total);
+    renderPagination(total, links);
+  } else {
+    renderTotal(total);
+    renderPagination(total, links);
+    renderResults(streams);
+  }
+}
+
 // helpers
 function createUrl(queryString) {
   return "https://api.twitch.tv/kraken/search/streams?callback=handleTwitchData&q=" + encodeURIComponent(queryString);
@@ -154,12 +171,18 @@ function getQueryParameters(url) {
   return parameters;
 }
 // Required for moving from page to page or after 0 result search
-function clearResults() {
-  var twitchResults = document.getElementById('twitchResults');
+function clearResults(elementID) {
+  var parentElement = document.getElementById(elementID);
 
-  while (twitchResults.hasChildNodes()) {
-    twitchResults.removeChild(twitchResults.lastChild);
+  while (parentElement.hasChildNodes()) {
+    parentElement.removeChild(parentElement.lastChild);
   }
+}
+// to use to check cache and remove callback from query string
+// check the self url and it does not have the callback in the URL
+function cleanJSONPUrl(url) {
+  var idx = url.indexOf("&callback");
+  return url.slice(0, idx);
 }
 // UI event handlers
 var queryForm = document.getElementById('queryForm'),

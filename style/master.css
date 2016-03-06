@@ -85,6 +85,11 @@ input {
   margin-left: 1em;
 }
 
+.resultImage {
+  height: auto;
+  width: auto;
+}
+
 .displayName {
   font-size: 2.5em;
   color: #babbbc;
@@ -110,9 +115,7 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 30px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  height: 360px;
-  width: 720px;
+  height: auto;
+  width: auto;
+  padding: 3%;
 }
