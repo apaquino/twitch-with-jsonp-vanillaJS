@@ -61,18 +61,18 @@
 
   function renderLeftArrow(links) {
     var leftArrow = document.getElementById('leftArrow'),
-        displayLeftArrow = links.prev ? "inline" : "none";
+        displayLeftArrow = links.prev ? "visible" : "hidden";
         // If there is no prev link, you are at the first index
-    leftArrow.style.display = displayLeftArrow;
+    leftArrow.style.visibility = displayLeftArrow;
   }
 
   function renderRightArrow(total, links) {
     var rightArrow = document.getElementById('rightArrow'),
         nextParams = getQueryParameters(links.next),
-        displayRightArrow = (total > nextParams.offset) ? "inline" : "none";
+        displayRightArrow = (total > nextParams.offset) ? "visible" : "hidden";
         // if the total amount if results is more than the offset, there is no next
         // you can go but you will get a blank screen.  RelayJS handles this better.
-    rightArrow.style.display = displayRightArrow;
+    rightArrow.style.visibility = displayRightArrow;
   }
 
   function renderPageInfo(total, links) {

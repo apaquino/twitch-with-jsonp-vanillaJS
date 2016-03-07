@@ -56,11 +56,11 @@ input {
 }
 
 #leftArrow {
-  display: none;
+  visibility: hidden;;
 }
 
 #rightArrow {
-  display: none;
+  visibility: hidden;
 }
 
 .arrow {
