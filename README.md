@@ -25,6 +25,6 @@ There is room for improvements and updates in the app if it were to be deployed 
 ### Change log
 
 * Add cache to make performance appear better
-* Wrapped main.js in IIFF
+* Wrap main.js in IIFE
 * Add loading spinner
   * issue on safari
